@@ -1,5 +1,6 @@
 select json_object(
 "dataElement", "yP2l23tmNoI",
+"value", Total,
 "period", DATE_FORMAT(Dt, "%Y%m%d")) as results
 from(
 SELECT COUNT(DISTINCT pv.patient_id) AS Total, pv.encounter_date as Dt
