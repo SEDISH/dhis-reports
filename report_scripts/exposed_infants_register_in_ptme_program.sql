@@ -1,5 +1,6 @@
 select json_object(
-"dataElement", "yP2l23tmNoI",
+"dataElement", "VYWeWjdYyfY",
+"categoryOptionCombo": "GiBSEXO5lzA",
 "value", Total,
 "period", DATE_FORMAT(Dt, "%Y%m%d")) as results
 from(
@@ -9,4 +10,3 @@ WHERE pv.actual_vih_status=1405
       AND pv.ptme=1065
 	  group by pv.encounter_date
 ) A
-

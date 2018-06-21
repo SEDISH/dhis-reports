@@ -1,5 +1,6 @@
 select json_object(
 "dataElement", "VJerPEgdSX3",
+"categoryOptionCombo": "GiBSEXO5lzA",
 "value", Total,
 "period", DATE_FORMAT(Dt, "%Y%m%d")) as results
 from(
