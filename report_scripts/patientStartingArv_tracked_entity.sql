@@ -16,11 +16,11 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         "attributes", JSON_ARRAY(
         JSON_OBJECT(
           "attribute", "py0TvSTBlrr",
-          "value", p.given_name
+          "value", p.family_name
         ),
         JSON_OBJECT(
           "attribute", "uWUIkGpSMa6",
-          "value", p.family_name
+          "value", p.given_name
         ),
         JSON_OBJECT(
           "attribute", "Cn9LcaW7Orr",
