@@ -1,6 +1,8 @@
 USE isanteplus;
 SET @default_group_concat_max_len = 1024;
 SET @max_group_concat_max_len = 4294967295;
+SET @date_format = '%Y-%m-%d';
+SET @org_unit = 'Vih6emBLLmw';
 
 SET SESSION group_concat_max_len = @max_group_concat_max_len;
 
@@ -10,7 +12,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
     FROM (
       SELECT JSON_OBJECT (
         "trackedEntity", "MCPQUTHX1Ze",
-        "orgUnit", "Vih6emBLLmw",
+        "orgUnit", @org_unit,
         "attributes", JSON_ARRAY(
           JSON_OBJECT(
             "attribute", "py0TvSTBlrr",
@@ -27,10 +29,10 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
           ),
         "enrollments", JSON_ARRAY(
           JSON_OBJECT(
-            "orgUnit", "Vih6emBLLmw",
+            "orgUnit", @org_unit,
             "program", "x2NBbIpHohD",
-            "enrollmentDate", DATE_FORMAT(DATE(NOW()), "%Y%m%d"),
-            "incidentDate", DATE_FORMAT(MAX(patstatus.start_date), "%Y%m%d")
+            "enrollmentDate", DATE_FORMAT(DATE(NOW()), @date_format),
+            "incidentDate", DATE_FORMAT(MAX(patstatus.start_date), @date_format)
             )
           )
         ) AS track_entity
