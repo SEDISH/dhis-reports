@@ -17,7 +17,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         "eventDate", DATE_FORMAT(MAX(patstatus.start_date), @date_format),
         "status", "COMPLETED",
         "storedBy", "admin",
-        "trackedEntityInstance", "bJxlK2l2TGx",
+        "trackedEntityInstance", (CALL generateID(pat.identifier)),
         "dataValues", JSON_ARRAY(
           JSON_OBJECT(
             "dataElement", "EhQ157ZZMny", # Contact

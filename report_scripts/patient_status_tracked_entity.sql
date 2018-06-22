@@ -12,6 +12,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
     FROM (
       SELECT JSON_OBJECT (
         "trackedEntity", "MCPQUTHX1Ze",
+        "trackedEntityInstance", (CALL generateID(pat.identifier)),
         "orgUnit", @org_unit,
         "attributes", JSON_ARRAY(
           JSON_OBJECT(
