@@ -11,3 +11,4 @@
 ./json_formatter.sh number_prenatal_visit_by_site.sql
 ./json_formatter.sh number_visits_by_pregnant_women_to_the_clinic.sql
 ./json_formatter.sh pregnancy_women_on_haart.sql
+./json_formatter.sh firstVisitAge.sql
