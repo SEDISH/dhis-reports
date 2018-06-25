@@ -1,10 +1,15 @@
-USE isanteplus;
-SET @default_group_concat_max_len = 1024;
-SET @max_group_concat_max_len = 4294967295;
-SET @date_format = '%Y-%m-%d';
-SET @org_unit = 'Vih6emBLLmw';
+DROP PROCEDURE IF EXISTS visitNextFourteenDays_tracked_entity;
+DELIMITER $$
+CREATE PROCEDURE visitNextFourteenDays_tracked_entity(IN org_unit VARCHAR(11))
+BEGIN
+  DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
+  DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
+  DECLARE date_format VARCHAR(255) DEFAULT '%Y-%m-%d';
+  DECLARE program CHAR(11) DEFAULT 'rCJQM1bvXYm';
 
-SET SESSION group_concat_max_len = @max_group_concat_max_len;
+SET SESSION group_concat_max_len = max_group_concat_max_len;
+
+CALL patient_insert_idgen(program);
 
 SELECT (SELECT CONCAT( "{\"trackedEntityInstances\": ", instances.entity_instance, "}")
 FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
@@ -12,7 +17,8 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
     FROM (
       SELECT DISTINCT JSON_OBJECT (
         "trackedEntity", "MCPQUTHX1Ze",
-        "orgUnit", @org_unit,
+        "trackedEntityInstance", pat.program_patient_id,
+        "orgUnit", org_unit,
         "attributes", JSON_ARRAY(
         JSON_OBJECT(
           "attribute", "py0TvSTBlrr",
@@ -29,38 +35,45 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         ),
         "enrollments", JSON_ARRAY(
           JSON_OBJECT(
-            "orgUnit", @org_unit,
-            "program", "rCJQM1bvXYm",
-            "enrollmentDate", DATE_FORMAT(DATE(NOW()), @date_format),
-            "incidentDate", DATE_FORMAT(NOW(), @date_format)
+            "orgUnit", org_unit,
+            "program", program,
+            "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
+            "incidentDate", DATE_FORMAT(NOW(), date_format)
           )
         )
       ) AS track_entity
       FROM (
-        select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name,
+        select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name, tmp.program_patient_id,
           pa.family_name, pa.gender, TIMESTAMPDIFF(YEAR, pa.birthdate,DATE(now())) as age,
           pa.telephone, f.name, asl.name_fr, DATE_FORMAT(pv.next_visit_date, "%d-%m-%Y") as nextVisit
         from isanteplus.patient pa, isanteplus.patient_visit pv, openmrs.form f,
-          isanteplus.arv_status_loockup asl
+          isanteplus.arv_status_loockup asl, isanteplus.tmp_idgen tmp
         where pa.patient_id=pv.patient_id AND pv.form_id=f.form_id and pa.arv_status = asl.id
         and pv.next_visit_date between date(now()) and date_add(date(now()),interval 14 day)
+        AND tmp.identifier = pa.identifier
+        AND tmp.program_id = program
 
         UNION
 
-        select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name,
+        select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name, tmp.program_patient_id,
           pa.family_name, pa.gender, TIMESTAMPDIFF(YEAR, pa.birthdate,DATE(now())) as age,
           pa.telephone, f.name, asl.name_fr, DATE_FORMAT(pd.next_dispensation_date, "%d-%m-%Y") as nextVisit
         from isanteplus.patient pa, isanteplus.patient_dispensing pd, openmrs.encounter
-          enc, openmrs.form f, isanteplus.arv_status_loockup asl
+          enc, openmrs.form f, isanteplus.arv_status_loockup asl, isanteplus.tmp_idgen tmp
         where pa.patient_id=pd.patient_id
         AND pd.encounter_id=enc.encounter_id
         AND enc.form_id=f.form_id
         AND pa.arv_status = asl.id
         and pd.next_dispensation_date between date(now()) and date_add(date(now()),interval 14 day)
+        AND tmp.identifier = pa.identifier
+        AND tmp.program_id = program
       ) pat
     ) AS entities_list
   ) AS instance
 ) AS instances)
 INTO OUTFILE '/var/lib/mysql-files/visitNextFourteenDays_tracked_entity.json';
 
-SET SESSION group_concat_max_len = @default_group_concat_max_len;
+SET SESSION group_concat_max_len = default_group_concat_max_len;
+
+END $$
+DELIMITER ;
