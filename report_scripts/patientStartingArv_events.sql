@@ -21,7 +21,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         "eventDate", DATE_FORMAT(distinct_entity.visit_date, date_format),
         "status", "COMPLETED",
         "storedBy", "admin",
-        "trackedEntityInstance", tmp.program_patient_id,
+        "trackedEntityInstance", distinct_entity.program_patient_id,
         "dataValues", JSON_ARRAY(
           JSON_OBJECT(
             "dataElement", "VT5fvNKFHr7", # Date visite
