@@ -1,7 +1,7 @@
 -- The list of patients whose ARV refill date is expected within the next 30 days.
 DROP PROCEDURE IF EXISTS patientNextArvInThirtyDay_event;
 DELIMITER $$
-CREATE PROCEDURE patientNextArvInThirtyDay_event(IN org_unit_code VARCHAR(11))
+CREATE PROCEDURE patientNextArvInThirtyDay_event(IN org_unit VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -17,7 +17,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT JSON_OBJECT (
         "program", program,
         "programStage", "yzcSkGEI4qe",
-        "orgUnit", org_unit_code,
+        "orgUnit", org_unit,
         "eventDate", DATE_FORMAT(pdisp.next_dispensation_date, date_format),
         "status", "COMPLETED",
         "storedBy", "admin",

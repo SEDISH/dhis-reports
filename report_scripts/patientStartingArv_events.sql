@@ -1,6 +1,6 @@
 DROP PROCEDURE IF EXISTS patientStartingArv_events;
 DELIMITER $$
-CREATE PROCEDURE patientStartingArv_events(IN org_unit_code VARCHAR(11))
+CREATE PROCEDURE patientStartingArv_events(IN org_unit VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -16,7 +16,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT DISTINCT JSON_OBJECT (
         "program", program,
         "programStage", "ZXfPQNL2Tmv",
-        "orgUnit", org_unit_code,
+        "orgUnit", org_unit,
         "eventDate", DATE_FORMAT(pdis.visit_date, date_format),
         "status", "COMPLETED",
         "storedBy", "admin",

@@ -1,6 +1,6 @@
 DROP PROCEDURE IF EXISTS visitNextSevenDays_event;
 DELIMITER $$
-CREATE PROCEDURE visitNextSevenDays_event(IN org_unit_code VARCHAR(11))
+CREATE PROCEDURE visitNextSevenDays_event(IN org_unit VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -16,7 +16,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT JSON_OBJECT (
         "program", program,
         "programStage", "vouQ9awMFRL",
-        "orgUnit", org_unit_code,
+        "orgUnit", org_unit,
         "eventDate", DATE_FORMAT(NOW(), date_format),
         "status", "COMPLETED",
         "storedBy", "admin",

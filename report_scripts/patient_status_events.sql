@@ -1,6 +1,6 @@
 DROP PROCEDURE IF EXISTS patient_status_events;
 DELIMITER $$
-CREATE PROCEDURE patient_status_events(IN org_unit_code VARCHAR(11))
+CREATE PROCEDURE patient_status_events(IN org_unit VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -16,7 +16,7 @@ BEGIN
         SELECT JSON_OBJECT (
           "program", program,
           "programStage", "ROWwGepZ2yb",
-          "orgUnit", org_unit_code,
+          "orgUnit", org_unit,
           "eventDate", DATE_FORMAT(MAX(patstatus.start_date), date_format),
           "status", "COMPLETED",
           "storedBy", "admin",

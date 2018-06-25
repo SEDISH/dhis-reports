@@ -1,7 +1,7 @@
 -- The list of patients whose ARV refill date has expired
 DROP PROCEDURE IF EXISTS patientArvEnd_event;
 DELIMITER $$
-CREATE PROCEDURE patientArvEnd_event(IN org_unit_code VARCHAR(11))
+CREATE PROCEDURE patientArvEnd_event(IN org_unit VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -17,7 +17,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT JSON_OBJECT (
         "program", program,
         "programStage", "IqJDiNsnzI5",
-        "orgUnit", org_unit_code,
+        "orgUnit", org_unit,
         "eventDate", DATE_FORMAT(pdisp.next_dispensation_date, date_format),
         "status", "COMPLETED",
         "storedBy", "admin",

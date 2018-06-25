@@ -9,6 +9,8 @@ BEGIN
 
 SET SESSION group_concat_max_len = max_group_concat_max_len;
 
+CALL patient_insert_idgen(program);
+
 SELECT (SELECT CONCAT( "{\"trackedEntityInstances\": ", instances.entity_instance, "}")
 FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
   FROM (SELECT GROUP_CONCAT(entities_list.track_entity SEPARATOR ',') AS array
