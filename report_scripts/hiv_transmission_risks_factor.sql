@@ -6,6 +6,7 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=160580
+        AND cn.concept_id=vrf.risk_factor
 	AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) A
@@ -13,14 +14,15 @@ from(
 UNION ALL
 
 select json_object(
-"dataElement", "fnvkN4JHmP0O",
+"dataElement", "nvkN4JHmP0O",
 "value", Total,
 "period", DATE_FORMAT(Dt, "%Y%m%d")) as results
 from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=105
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) B
 
@@ -34,7 +36,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=156660
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) C
 
@@ -48,7 +51,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=123160
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) D
 
@@ -62,7 +66,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=159218
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) E
 
@@ -76,7 +81,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=160579
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) F
 
@@ -90,7 +96,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=163273
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) G
 
@@ -104,7 +111,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=163289
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) H
 
@@ -118,7 +126,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=163290
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) I
 
@@ -132,6 +141,8 @@ from(
 	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
 	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
 	WHERE cn.concept_id=163291
-	AND cn.locale='fr'
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
 	GROUP BY cn.name, vrf.encounter_date
 ) J
+
