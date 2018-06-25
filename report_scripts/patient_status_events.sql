@@ -1,10 +1,11 @@
 DROP PROCEDURE IF EXISTS patient_status_events;
 DELIMITER $$
-CREATE PROCEDURE patient_status_events(program IN CHAR(11), org_unit_code IN VARCHAR(11))
+CREATE PROCEDURE patient_status_events(IN org_unit_code VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
   DECLARE date_format VARCHAR(60) DEFAULT '%Y-%m-%d';
+  DECLARE program CHAR(11) DEFAULT 'x2NBbIpHohD';
 
   SET SESSION group_concat_max_len = max_group_concat_max_len;
 
@@ -13,7 +14,7 @@ BEGIN
     FROM (SELECT GROUP_CONCAT(entities_list.track_entity SEPARATOR ',') AS array
       FROM (
         SELECT JSON_OBJECT (
-          "program", "x2NBbIpHohD",
+          "program", program,
           "programStage", "ROWwGepZ2yb",
           "orgUnit", org_unit_code,
           "eventDate", DATE_FORMAT(MAX(patstatus.start_date), date_format),

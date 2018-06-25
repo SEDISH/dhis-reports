@@ -1,10 +1,11 @@
 DROP PROCEDURE IF EXISTS patient_status_tracked_entity;
 DELIMITER $$
-CREATE PROCEDURE patient_status_tracked_entity(IN program CHAR(11), IN org_unit VARCHAR(11))
+CREATE PROCEDURE patient_status_tracked_entity(IN org_unit VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
   DECLARE date_format VARCHAR(255) DEFAULT '%Y-%m-%d';
+  DECLARE program CHAR(11) DEFAULT 'x2NBbIpHohD';
 
   SET SESSION group_concat_max_len = max_group_concat_max_len;
 
