@@ -32,7 +32,7 @@ BEGIN
               ),
             JSON_OBJECT(
               "dataElement", "ofp7LiAyMsW", # Dernière date
-              "value", MAX(patstatus.start_date)
+              "value", DATE_FORMAT(MAX(patstatus.start_date), date_format)
               ),
             JSON_OBJECT(
               "dataElement", "vHkw3Habii4", # Gender
