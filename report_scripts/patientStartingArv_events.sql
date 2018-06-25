@@ -25,7 +25,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         "dataValues", JSON_ARRAY(
           JSON_OBJECT(
             "dataElement", "VT5fvNKFHr7", # Date visite
-            "value", DATE_FORMAT(pdis.visit_date, date_format)
+            "value", DATE_FORMAT(distinct_entity.visit_date, date_format)
           ),
           JSON_OBJECT(
             "dataElement", "bzpXF1yVV74", # No. dentité nationale
@@ -33,7 +33,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
           ),
           JSON_OBJECT(
             "dataElement", "XY1yClztxCG", # Date de naissance
-            "value", DATE_FORMAT(p.birthdate, date_format)
+            "value", DATE_FORMAT(distinct_entity.birthdate, date_format)
           )
         )
       ) AS tracked_entity
