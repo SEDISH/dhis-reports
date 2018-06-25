@@ -146,3 +146,34 @@ from(
 	GROUP BY cn.name, vrf.encounter_date
 ) J
 
+UNION ALL
+
+select json_object(
+"dataElement", "nZ2XNfRzJOD",
+"value", Total,
+"period", DATE_FORMAT(Dt, "%Y%m%d")) as results
+from(
+	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
+	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
+	WHERE cn.concept_id=5567
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
+	GROUP BY cn.name, vrf.encounter_date
+) K
+
+UNION ALL
+
+select json_object(
+"dataElement", "2wche0R7arR",
+"value", Total,
+"period", DATE_FORMAT(Dt, "%Y%m%d")) as results
+from(
+	select cn.name as Md, COUNT(distinct vrf.patient_id) as Total, vrf.encounter_date as Dt
+	FROM openmrs.concept_name cn, isanteplus.vih_risk_factor vrf
+	WHERE cn.concept_id=1063
+	AND cn.concept_id=vrf.risk_factor
+        AND cn.locale='fr'
+	GROUP BY cn.name, vrf.encounter_date
+) M
+
+
