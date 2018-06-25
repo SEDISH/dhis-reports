@@ -21,7 +21,6 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         "status", "COMPLETED",
         "storedBy", "admin",
         "trackedEntityInstance", pat.program_patient_id,
-        "trackedEntityInstance", "bJxlK2l2TGx",
         "dataValues", JSON_ARRAY(
           JSON_OBJECT(
             "dataElement", "uSSFtn7oU2n", # Age
@@ -53,7 +52,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
           ),
           JSON_OBJECT(
             "dataElement", "FXOsGws33YA", # Prochaine visite
-            "value", pat.nextVisit
+            "value", DATE_FORMAT(pat.nextVisit, date_format)
           )
         )
       ) AS track_entity
