@@ -14,7 +14,7 @@ SELECT (SELECT CONCAT( "{\"events\": ", instances.entity_instance, "}")
 FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
   FROM (SELECT GROUP_CONCAT(entities_list.track_entity SEPARATOR ',') AS array
     FROM (
-      SELECT JSON_OBJECT (
+      SELECT DISTINCT JSON_OBJECT (
         "program", program,
         "programStage", "yzcSkGEI4qe",
         "orgUnit", org_unit,

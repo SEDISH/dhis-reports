@@ -1,6 +1,6 @@
 USE isanteplus;
 
-set @org_unit = 'Vih6emBLLmw';
+set @org_unit = 'duiCIjNovr0';
 
 CALL patient_status_tracked_entity(@org_unit);
 CALL patientArvEnd_tracked_entity(@org_unit);
