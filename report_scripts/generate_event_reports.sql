@@ -10,6 +10,7 @@ CALL patientStartingArv_tracked_entity(@org_unit);
 CALL visitNextFourteenDays_tracked_entity(@org_unit);
 CALL visitNextSevenDays_tracked_entity(@org_unit);
 
+CALL hiv_patient_with_activity_after_disc_events(@org_unit);
 CALL patient_status_events(@org_unit);
 CALL patientArvEnd_event(@org_unit);
 CALL patientNextArvInThirtyDay_event(@org_unit);

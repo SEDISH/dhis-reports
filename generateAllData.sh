@@ -8,6 +8,7 @@ USER=root
 DB=isanteplus
 
 # create procedures
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_events.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/idgen.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patient_status_events.sql";

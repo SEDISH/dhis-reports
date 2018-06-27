@@ -1,7 +1,7 @@
 -- HIV patient with activity after discontinuation
-DROP PROCEDURE IF EXISTS hiv_patient_with_activity_after_disc_tracked_entity;
+DROP PROCEDURE IF EXISTS hiv_patient_with_activity_after_disc_events;
 DELIMITER $$
-CREATE PROCEDURE hiv_patient_with_activity_after_disc_tracked_entity(IN org_unit VARCHAR(11))
+CREATE PROCEDURE hiv_patient_with_activity_after_disc_events(IN org_unit VARCHAR(11))
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -11,39 +11,41 @@ BEGIN
 
   SET SESSION group_concat_max_len = max_group_concat_max_len;
 
-  CALL patient_insert_idgen(program);
-
-  SELECT (SELECT CONCAT( "{\"trackedEntityInstances\": ", instances.entity_instance, "}")
+  SELECT (SELECT CONCAT( "{\"events\": ", instances.entity_instance, "}")
   FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
-    FROM (SELECT GROUP_CONCAT(entities_list.track_entity SEPARATOR ',') AS array
+    FROM (SELECT GROUP_CONCAT(entities_list.tracked_entity SEPARATOR ',') AS array
       FROM (
-        SELECT JSON_OBJECT (
-          "trackedEntity", "MCPQUTHX1Ze",
-          "trackedEntityInstance", distinct_entity.program_patient_id,
+        SELECT DISTINCT JSON_OBJECT (
+          "program", program,
+          "programStage", "rN1j8bJNlev",
           "orgUnit", org_unit,
-          "attributes", JSON_ARRAY(
+          "eventDate", DATE_FORMAT(distinct_entity.discontinuation_date, date_format),
+          "status", "COMPLETED",
+          "storedBy", "admin",
+          "trackedEntityInstance", distinct_entity.program_patient_id,
+          "dataValues", JSON_ARRAY(
             JSON_OBJECT(
-              "attribute", "py0TvSTBlrr",
-              "value", distinct_entity.family_name
-              ),
-            JSON_OBJECT(
-              "attribute", "uWUIkGpSMa6",
-              "value", distinct_entity.given_name
-              ),
-            JSON_OBJECT(
-              "attribute", "Cn9LcaW7Orr",
-              "value", distinct_entity.identifier
-              )
+              "dataElement", "BruXV0FD2XS", -- No. de patient attribué par le site
+              "value", distinct_entity.st_id
             ),
-          "enrollments", JSON_ARRAY(
             JSON_OBJECT(
-              "orgUnit", org_unit,
-              "program", program,
-              "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
-              "incidentDate", DATE_FORMAT(DATE(NOW()), date_format)
-              )
+              "dataElement", "bzpXF1yVV74", -- No. dentité nationale
+              "value", distinct_entity.national_id
+            ),
+            JSON_OBJECT(
+              "dataElement", "FVRCqcG8gZs", -- Date de discontinuation
+              "value", DATE_FORMAT(distinct_entity.discontinuation_date, date_format)
+            ),
+            JSON_OBJECT(
+              "dataElement", "ofp7LiAyMsW", -- Dernière date
+              "value", DATE_FORMAT(distinct_entity.last_date, date_format)
+            ),
+            JSON_OBJECT(
+              "dataElement", "LxhqdExyea0", -- Name
+              "value", distinct_entity.name
             )
-          ) AS track_entity
+          )
+        ) AS tracked_entity
         FROM (SELECT DISTINCT p.identifier, p.st_id, p.national_id, p.family_name, p.given_name,
                 MAX(DATE(en.encounter_datetime)) as discontinuation_date, entype.name,
                 MAX(DATE(enc.encounter_datetime)) as last_date, tmp.program_patient_id
@@ -62,7 +64,7 @@ BEGIN
       ) AS entities_list
     ) AS instance
   ) AS instances)
-  INTO OUTFILE '/var/lib/mysql-files/hiv_patient_with_activity_after_disc_tracked_entity.json';
+  INTO OUTFILE '/var/lib/mysql-files/hiv_patient_with_activity_after_disc_events.json';
 
   SET SESSION group_concat_max_len = default_group_concat_max_len;
 
