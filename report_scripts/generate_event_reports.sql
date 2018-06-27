@@ -2,6 +2,7 @@ USE isanteplus;
 
 set @org_unit = 'duiCIjNovr0';
 
+CALL hiv_patient_with_activity_after_disc_tracked_entity(@org_unit);
 CALL patient_status_tracked_entity(@org_unit);
 CALL patientArvEnd_tracked_entity(@org_unit);
 CALL patientNextArvInThirtyDay_tracked_entity(@org_unit);

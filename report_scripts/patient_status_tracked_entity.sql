@@ -38,7 +38,7 @@ BEGIN
               "orgUnit", org_unit,
               "program", program,
               "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
-              "incidentDate", DATE_FORMAT(MAX(patstatus.start_date), date_format)
+              "incidentDate", DATE_FORMAT(DATE(NOW()), date_format)
               )
             )
           ) AS track_entity
