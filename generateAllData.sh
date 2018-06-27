@@ -24,6 +24,8 @@ mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextFourteenDays_eve
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextFourteenDays_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextSevenDays_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextSevenDays_tracked_entity.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patient_with_only_register_form_event.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patient_with_only_register_form_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/consultationByDay_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/consultationByDay_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_without_first_visit_event.sql";
