@@ -24,6 +24,8 @@ mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextSevenDays_event.
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextSevenDays_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/consultationByDay_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/consultationByDay_tracked_entity.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_without_first_visit_event.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_without_first_visit_tracked_entity.sql";
 
 #  generate and format the data
 mkdir -p report_results
