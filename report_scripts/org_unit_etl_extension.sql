@@ -25,7 +25,7 @@ BEGIN
   SET organisation_code = loc_attr.value_reference, last_updated_date = NOW()
   WHERE p.location_id = loc_attr.location_id
   AND loc_attr.attribute_type_id = attr_type
-  AND organisation_code = NULL;
+  AND organisation_code IS NULL;
 
   SET SQL_SAFE_UPDATES = 1;
 

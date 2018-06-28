@@ -1,4 +1,4 @@
--- HIV patient with activity after discontinuation
+-- Patient with only a register form
 DROP PROCEDURE IF EXISTS patient_with_only_register_form_event;
 DELIMITER $$
 CREATE PROCEDURE patient_with_only_register_form_event()
