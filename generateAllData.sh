@@ -37,19 +37,19 @@ mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_without_first
 #  generate and format the data
 mkdir -p report_results
 mysql -u $USER -p$1 $DB < report_scripts/generate_event_reports.sql
-./cp_jsons.sh ./report_results/
+./cpJsons.sh ./report_results/
 
-./json_formatter.sh communityArvDistribution.sql  $1
-./json_formatter.sh exposed_infants_register_in_ptme_program.sql  $1
-./json_formatter.sh hiv_transmission_risks_factor.sql  $1
-./json_formatter.sh number_eligible_children_for_pcr.sql  $1
-./json_formatter.sh number_exposed_infants_tested_by_pcr.sql  $1
-./json_formatter.sh number_infants_from_mother_on_prophylaxis.sql  $1
-./json_formatter.sh numberOfPatientByArvStatus.sql  $1
-./json_formatter.sh number_patient_beneficie_pcr.sql  $1
-./json_formatter.sh numberPatientReceivingARVByPeriod.sql  $1
-./json_formatter.sh number_pregnancy_women_had_prenatal_cons.sql  $1
-./json_formatter.sh number_prenatal_visit_by_site.sql  $1
-./json_formatter.sh number_visits_by_pregnant_women_to_the_clinic.sql  $1
-./json_formatter.sh pregnancy_women_on_haart.sql  $1
-./json_formatter.sh firstVisitAge.sql  $1
+./jsonFormatter.sh communityArvDistribution.sql  $1
+./jsonFormatter.sh exposed_infants_register_in_ptme_program.sql  $1
+./jsonFormatter.sh hiv_transmission_risks_factor.sql  $1
+./jsonFormatter.sh number_eligible_children_for_pcr.sql  $1
+./jsonFormatter.sh number_exposed_infants_tested_by_pcr.sql  $1
+./jsonFormatter.sh number_infants_from_mother_on_prophylaxis.sql  $1
+./jsonFormatter.sh numberOfPatientByArvStatus.sql  $1
+./jsonFormatter.sh number_patient_beneficie_pcr.sql  $1
+./jsonFormatter.sh numberPatientReceivingARVByPeriod.sql  $1
+./jsonFormatter.sh number_pregnancy_women_had_prenatal_cons.sql  $1
+./jsonFormatter.sh number_prenatal_visit_by_site.sql  $1
+./jsonFormatter.sh number_visits_by_pregnant_women_to_the_clinic.sql  $1
+./jsonFormatter.sh pregnancy_women_on_haart.sql  $1
+./jsonFormatter.sh firstVisitAge.sql  $1
