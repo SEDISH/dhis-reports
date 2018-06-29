@@ -7,6 +7,9 @@ fi
 USER=root
 DB=isanteplus
 
+# prcess etl extension
+mysql -u $USER -p$1 -D $DB -e "source ./etl_extension/dashboard_etl_extension.sql";
+
 # create procedures
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_events.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_tracked_entity.sql";
@@ -30,6 +33,8 @@ mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/consultationByDay_event.s
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/consultationByDay_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_without_first_visit_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_without_first_visit_tracked_entity.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/dashboard_event.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/dashboard_tracked_entity.sql";
 
 #  generate and format the data
 mkdir -p report_results
