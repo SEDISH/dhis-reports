@@ -1,6 +1,7 @@
 USE isanteplus;
 
 CALL org_unit_etl_extension();
+CALL dashboard_etl_extension();
 
 CALL hiv_patient_with_activity_after_disc_tracked_entity();
 CALL patient_status_tracked_entity();
@@ -23,6 +24,5 @@ CALL visitNextFourteenDays_events();
 CALL patient_with_only_register_form_event();
 CALL visitNextSevenDays_event();
 CALL hivPatientWithoutFirstVisit_event();
-CALL dashboard_etl_extension();
 -- CALL consultationByDay_event();
 CALL dashboard_event();

@@ -136,12 +136,16 @@ BEGIN
               "value", distinct_entity.palliativeCare_total_child
             ),
             JSON_OBJECT(
+              "dataElement", "l4aryW8O1kR", -- Totaux généraux
+              "value", distinct_entity.grandTotal
+            ),
+            JSON_OBJECT(
               "dataElement", "VfSDy2CH6kX", -- Version
-              "value", distinct_entity.palliativeCare_total_child
+              "value", distinct_entity.value_reference
             )
           )
         ) AS tracked_entity
-        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate, p.organisation_code
+        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate, p.organisation_code,
             COUNT(
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (
@@ -375,15 +379,22 @@ BEGIN
                     )
                 ) THEN p.patient_id ELSE null END
             ) AS palliativeCare_total_child,
-            COUNT(p.patient_id) AS grandTotal
-        FROM patient p, isanteplus.tmp_idgen tmp,
-          ( SELECT location_id, MIN(date_created) oldestDate, MAX(date_created) latestDate
-            FROM `openmrs`.obs
-            GROUP BY location_id ) AS dates
-        WHERE tmp.identifier = p.identifier
-        AND tmp.program_id = program
-        AND dates.location_id = p.location_id
-        GROUP BY p.location_id
+            COUNT(p.patient_id) AS grandTotal, -- Totaux généraux
+            version.value_reference -- Version
+          FROM isanteplus.tmp_idgen tmp,
+            ( SELECT location_id, MIN(date_created) oldestDate, MAX(date_created) latestDate
+              FROM `openmrs`.obs
+              GROUP BY location_id ) AS dates,
+            patient p
+            LEFT OUTER JOIN ( SELECT l.location_id, l.value_reference
+                              FROM `openmrs`.location_attribute l, `openmrs`.location_attribute_type a
+                              WHERE l.attribute_type_id = a.location_attribute_type_id
+                              AND a.uuid = '26dd75b4-31cb-44af-96e9-76844a31ab32' ) AS version
+            ON version.location_id = p.location_id
+          WHERE tmp.identifier = p.identifier
+          AND tmp.program_id = program
+          AND dates.location_id = p.location_id
+          GROUP BY p.location_id
         ) AS distinct_entity
       ) AS entities_list
     ) AS instance
