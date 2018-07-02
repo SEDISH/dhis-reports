@@ -7,7 +7,10 @@ fi
 USER=root
 DB=isanteplus
 
-# create procedures
+# create procedure for etl
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/org_unit_etl_extension.sql";
+
+# create procedures for convertion
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_events.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/idgen.sql";

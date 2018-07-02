@@ -1,7 +1,7 @@
-# List of patients who started an HAART regimen
+-- List of patients who started an HAART regimen
 DROP PROCEDURE IF EXISTS patientStartingArv_events;
 DELIMITER $$
-CREATE PROCEDURE patientStartingArv_events(IN org_unit VARCHAR(11))
+CREATE PROCEDURE patientStartingArv_events()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -17,28 +17,28 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT DISTINCT JSON_OBJECT (
         "program", program,
         "programStage", "ZXfPQNL2Tmv",
-        "orgUnit", org_unit,
+        "orgUnit", distinct_entity.organisation_code,
         "eventDate", DATE_FORMAT(distinct_entity.visit_date, date_format),
         "status", "COMPLETED",
         "storedBy", "admin",
         "trackedEntityInstance", distinct_entity.program_patient_id,
         "dataValues", JSON_ARRAY(
           JSON_OBJECT(
-            "dataElement", "VT5fvNKFHr7", # Date visite
+            "dataElement", "VT5fvNKFHr7", -- Date visite
             "value", DATE_FORMAT(distinct_entity.visit_date, date_format)
           ),
           JSON_OBJECT(
-            "dataElement", "bzpXF1yVV74", # No. dentité nationale
+            "dataElement", "bzpXF1yVV74", -- No. dentité nationale
             "value", distinct_entity.national_id
           ),
           JSON_OBJECT(
-            "dataElement", "XY1yClztxCG", # Date de naissance
+            "dataElement", "XY1yClztxCG", -- Date de naissance
             "value", DATE_FORMAT(distinct_entity.birthdate, date_format)
           )
         )
       ) AS tracked_entity
       FROM (SELECT DISTINCT MIN(DATE(pdis.visit_date)) as visit_date, p.national_id, p.given_name,
-            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier
+            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier, p.organisation_code
             FROM isanteplus.patient p,isanteplus.patient_dispensing pdis, isanteplus.tmp_idgen tmp
             WHERE p.patient_id=pdis.patient_id
             AND pdis.drug_id IN (select arvd.drug_id from isanteplus.arv_drugs arvd)

@@ -1,6 +1,6 @@
 DROP PROCEDURE IF EXISTS patient_status_tracked_entity;
 DELIMITER $$
-CREATE PROCEDURE patient_status_tracked_entity(IN org_unit VARCHAR(11))
+CREATE PROCEDURE patient_status_tracked_entity()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -17,40 +17,44 @@ BEGIN
       FROM (
         SELECT JSON_OBJECT (
           "trackedEntity", "MCPQUTHX1Ze",
-          "trackedEntityInstance", tmp.program_patient_id,
-          "orgUnit", org_unit,
+          "trackedEntityInstance", distinct_entity.program_patient_id,
+          "orgUnit", distinct_entity.organisation_code,
           "attributes", JSON_ARRAY(
             JSON_OBJECT(
               "attribute", "py0TvSTBlrr",
-              "value", pat.family_name
+              "value", distinct_entity.family_name
               ),
             JSON_OBJECT(
               "attribute", "uWUIkGpSMa6",
-              "value", pat.given_name
+              "value", distinct_entity.given_name
               ),
             JSON_OBJECT(
               "attribute", "Cn9LcaW7Orr",
-              "value", pat.identifier
+              "value", distinct_entity.identifier
               )
             ),
           "enrollments", JSON_ARRAY(
             JSON_OBJECT(
-              "orgUnit", org_unit,
+              "orgUnit", distinct_entity.organisation_code,
               "program", program,
               "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
               "incidentDate", DATE_FORMAT(DATE(NOW()), date_format)
               )
             )
           ) AS track_entity
-        FROM isanteplus.patient pat
-        INNER JOIN isanteplus.patient_status_arv patstatus
-        ON pat.patient_id = patstatus.patient_id
-        INNER JOIN isanteplus.arv_status_loockup arv
-        ON patstatus.id_status = arv.id
-        INNER JOIN isanteplus.tmp_idgen tmp
-        ON tmp.identifier = pat.identifier
-        AND tmp.program_id = program
-        GROUP BY pat.patient_id
+        FROM (SELECT pat.identifier, pat.st_id, pat.national_id, pat.given_name, pat.family_name,
+                pat.mother_name, pat.birthdate, pat.gender, DATE_FORMAT(MAX(patstatus.start_date), date_format) AS last_date,
+                patstatus.dis_reason, pat.telephone, arv.name_fr, TIMESTAMPDIFF(YEAR, pat.birthdate, DATE(NOW())) AS age,
+                pat.organisation_code, tmp.program_patient_id
+              FROM isanteplus.patient pat
+              INNER JOIN isanteplus.patient_status_arv patstatus
+              ON pat.patient_id=patstatus.patient_id
+              INNER JOIN isanteplus.arv_status_loockup arv
+              ON patstatus.id_status=arv.id
+              INNER JOIN isanteplus.tmp_idgen tmp
+              ON tmp.identifier = pat.identifier
+              AND tmp.program_id = program
+              GROUP BY pat.patient_id) AS distinct_entity
       ) AS entities_list
     ) AS instance
   ) AS instances)

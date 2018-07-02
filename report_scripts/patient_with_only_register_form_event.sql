@@ -1,7 +1,7 @@
--- HIV patient with activity after discontinuation
+-- Patient with only a register form
 DROP PROCEDURE IF EXISTS patient_with_only_register_form_event;
 DELIMITER $$
-CREATE PROCEDURE patient_with_only_register_form_event(IN org_unit VARCHAR(11))
+CREATE PROCEDURE patient_with_only_register_form_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -17,7 +17,7 @@ BEGIN
         SELECT DISTINCT JSON_OBJECT (
           "program", program,
           "programStage", "SSe717ZwYzp",
-          "orgUnit", org_unit,
+          "orgUnit", distinct_entity.organisation_code,
           "eventDate", DATE_FORMAT(distinct_entity.last_date, date_format),
           "status", "COMPLETED",
           "storedBy", "admin",
@@ -40,7 +40,7 @@ BEGIN
         FROM (
               SELECT DISTINCT p.st_id, p.national_id, p.family_name, p.identifier,
                 p.given_name, DATE(enc.encounter_datetime) AS last_date,
-                tmp.program_patient_id
+                tmp.program_patient_id, p.organisation_code
               FROM isanteplus.patient p, openmrs.encounter enc,
                 openmrs.encounter_type entype, isanteplus.tmp_idgen tmp
               WHERE p.patient_id=enc.patient_id
