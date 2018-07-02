@@ -1,7 +1,7 @@
 -- Dasboar report
 DROP PROCEDURE IF EXISTS dashboard_event;
 DELIMITER $$
-CREATE PROCEDURE dashboard_event(IN org_unit VARCHAR(11))
+CREATE PROCEDURE dashboard_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -17,7 +17,7 @@ BEGIN
         SELECT DISTINCT JSON_OBJECT (
           "program", program,
           "programStage", "zqbLP5kJWAf",
-          "orgUnit", org_unit,
+          "orgUnit", distinct_entity.organisation_code,
           "eventDate", DATE_FORMAT(NOW(), date_format),
           "status", "COMPLETED",
           "storedBy", "admin",
@@ -141,7 +141,7 @@ BEGIN
             )
           )
         ) AS tracked_entity
-        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate
+        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate, p.organisation_code
             COUNT(
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (

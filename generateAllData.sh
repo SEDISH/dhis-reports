@@ -7,7 +7,8 @@ fi
 USER=root
 DB=isanteplus
 
-# prcess etl extension
+# create procedure for etl
+mysql -u $USER -p$1 -D $DB -e "source ./etl_extension/org_unit_etl_extension.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./etl_extension/dashboard_etl_extension.sql";
 
 # create procedures

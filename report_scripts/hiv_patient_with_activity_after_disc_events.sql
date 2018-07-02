@@ -1,7 +1,7 @@
 -- HIV patient with activity after discontinuation
 DROP PROCEDURE IF EXISTS hiv_patient_with_activity_after_disc_events;
 DELIMITER $$
-CREATE PROCEDURE hiv_patient_with_activity_after_disc_events(IN org_unit VARCHAR(11))
+CREATE PROCEDURE hiv_patient_with_activity_after_disc_events()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -18,7 +18,7 @@ BEGIN
         SELECT DISTINCT JSON_OBJECT (
           "program", program,
           "programStage", "rN1j8bJNlev",
-          "orgUnit", org_unit,
+          "orgUnit", distinct_entity.organisation_code,
           "eventDate", DATE_FORMAT(distinct_entity.discontinuation_date, date_format),
           "status", "COMPLETED",
           "storedBy", "admin",
@@ -48,7 +48,7 @@ BEGIN
         ) AS tracked_entity
         FROM (SELECT DISTINCT p.identifier, p.st_id, p.national_id, p.family_name, p.given_name,
                 MAX(DATE(en.encounter_datetime)) as discontinuation_date, entype.name,
-                MAX(DATE(enc.encounter_datetime)) as last_date, tmp.program_patient_id
+                MAX(DATE(enc.encounter_datetime)) as last_date, tmp.program_patient_id, p.organisation_code
               FROM isanteplus.patient p, openmrs.encounter enc, openmrs.encounter_type entype, openmrs.encounter en,
                   isanteplus.tmp_idgen tmp
               WHERE p.patient_id = enc.patient_id
