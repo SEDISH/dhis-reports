@@ -18,11 +18,19 @@ BEGIN
           "program", program,
           "programStage", "zqbLP5kJWAf",
           "orgUnit", org_unit,
-          "eventDate", DATE_FORMAT(distinct_entity.discontinuation_date, date_format),
+          "eventDate", DATE_FORMAT(NOW(), date_format),
           "status", "COMPLETED",
           "storedBy", "admin",
           "trackedEntityInstance", distinct_entity.program_patient_id,
           "dataValues", JSON_ARRAY(
+            JSON_OBJECT(
+              "dataElement", "ND6F3M2VfBW", -- Date de premiere utilisation
+              "value", distinct_entity.oldestDate
+            ),
+            JSON_OBJECT(
+              "dataElement", "VWKw28B6LDB", -- Date de saisie la plus récente
+              "value", distinct_entity.latestDate
+            ),
             JSON_OBJECT(
               "dataElement", "ziEdMTsddYv", -- Sous TAR- Régulier (A)
               "value", distinct_entity.onHaart_regular_adult
@@ -56,21 +64,89 @@ BEGIN
               "value", distinct_entity.onHaart_stopped_child
             ),
             JSON_OBJECT(
-              "dataElement", "Dp95xn5tNRJ", -- Sous TAR- Arrêtés (A)
-              "value", distinct_entity.onHaart_stopped_adult
+              "dataElement", "hGzxULO6mJF", -- Sous TAR- Transférés (A)
+              "value", distinct_entity.onHaart_transfert_adult
             ),
             JSON_OBJECT(
-              "dataElement", "fDkWpV6cChZ", -- Sous TAR- Arrêtés (E)
-              "value", distinct_entity.onHaart_stopped_child
+              "dataElement", "IGke2nIqdLh", -- Sous TAR- Transférés (E)
+              "value", distinct_entity.onHaart_transfert_child
             ),
+            JSON_OBJECT(
+              "dataElement", "oRwcSJlTsKN", -- Sous TAR- Décédés (A)
+              "value", distinct_entity.onHaart_deathOnART_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "T9PnBDmDZX7", -- Sous TAR- Décédés (E)
+              "value", distinct_entity.onHaart_deathOnART_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "LfAIOup2d53", -- Sous TAR- Total (A)
+              "value", distinct_entity.onHaart_total_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "E8ik2ULn2TG", -- Sous TAR- Total (E)
+              "value", distinct_entity.onHaart_total_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "RdYT0Nwql3b", -- Soins palliatifs- Récent (A)
+              "value", distinct_entity.palliativeCare_recentOnPreART_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "SW4OEVnqfI2", -- Soins palliatifs- Récent (E)
+              "value", distinct_entity.palliativeCare_recentOnPreART_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "d6ja5ppe3Oi", -- Soins palliatifs- Aclifs (A)
+              "value", distinct_entity.palliativeCare_actifOnPreART_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "EypHsUYAnjp", -- Soins palliatifs- Aclifs (E)
+              "value", distinct_entity.palliativeCare_actifOnPreART_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "EXAbB6XEx1Q", -- Soins palliatifs- Perdus de vue (A)
+              "value", distinct_entity.palliativeCare_lostToFollowUpOnPreART_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "Pwi8q3LyPWX", -- Soins palliatifs- Perdus de vue (E)
+              "value", distinct_entity.palliativeCare_lostToFollowUpOnPreART_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "JyskwHdAeza", -- Soins palliatifs- Transférés (A)
+              "value", distinct_entity.palliativeCare_transferredOnPreART_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "muOn5QhPaes", -- Soins palliatifs- Transférés (E)
+              "value", distinct_entity.palliativeCare_transferredOnPreART_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "LTBzoetD0B3", -- Soins palliatifs- Décédés (A)
+              "value", distinct_entity.palliativeCare_deathOnPreART_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "XqqwIa5Nb3Q", -- Soins palliatifs- Décédés (E)
+              "value", distinct_entity.palliativeCare_deathOnPreART_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "ezQKAXSK7tH", -- Soins palliatifs- Total (A)
+              "value", distinct_entity.palliativeCare_total_adult
+            ),
+            JSON_OBJECT(
+              "dataElement", "VkgUH1XFJho", -- Soins palliatifs- Total (E)
+              "value", distinct_entity.palliativeCare_total_child
+            ),
+            JSON_OBJECT(
+              "dataElement", "VfSDy2CH6kX", -- Version
+              "value", distinct_entity.palliativeCare_total_child
+            )
           )
         ) AS tracked_entity
-        FROM (SELECT p.location_id,
+        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate
             COUNT(
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 6 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -79,7 +155,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 6 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -88,7 +164,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Rendez-vous ratés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 8 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -97,7 +173,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Rendez-vous ratés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 8 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -106,7 +182,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Perdus de vue
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 9 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -115,7 +191,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Perdus de vue
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 9 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -124,7 +200,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Arrêtés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 2 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -133,7 +209,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Arrêtés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 2 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -142,7 +218,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Transférés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 3 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -151,7 +227,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Transférés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 3 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -160,7 +236,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Décédés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 1 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -169,24 +245,24 @@ BEGIN
             DISTINCT CASE WHEN ( -- Décédés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 1 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
             ) AS onHaart_deathOnART_child,
             COUNT(
-            DISTINCT CASE WHEN (
+            DISTINCT CASE WHEN ( -- Sous TAR- Total (A)
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART WHERE AC = 'A'
+                        FROM p_on_haart WHERE AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
             ) AS onHaart_total_adult,
             COUNT(
-            DISTINCT CASE WHEN (
+            DISTINCT CASE WHEN ( -- Sous TAR- Total (E)
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -282,7 +358,7 @@ BEGIN
                 ) THEN p.patient_id ELSE null END
             ) AS palliativeCare_deathOnPreART_child,
             COUNT(
-            DISTINCT CASE WHEN (
+            DISTINCT CASE WHEN ( -- Soins palliatifs- Total (A)
               p.patient_id IN (
                 SELECT patient_id
                         FROM p_on_palliative_care
@@ -291,7 +367,7 @@ BEGIN
                 ) THEN p.patient_id ELSE null END
             ) AS palliativeCare_total_adult,
             COUNT(
-            DISTINCT CASE WHEN (
+            DISTINCT CASE WHEN ( -- Soins palliatifs- Total (E)
               p.patient_id IN (
                 SELECT patient_id
                         FROM p_on_palliative_care
@@ -300,7 +376,13 @@ BEGIN
                 ) THEN p.patient_id ELSE null END
             ) AS palliativeCare_total_child,
             COUNT(p.patient_id) AS grandTotal
-        FROM patient p
+        FROM patient p, isanteplus.tmp_idgen tmp,
+          ( SELECT location_id, MIN(date_created) oldestDate, MAX(date_created) latestDate
+            FROM `openmrs`.obs
+            GROUP BY location_id ) AS dates
+        WHERE tmp.identifier = p.identifier
+        AND tmp.program_id = program
+        AND dates.location_id = p.location_id
         GROUP BY p.location_id
         ) AS distinct_entity
       ) AS entities_list

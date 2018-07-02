@@ -35,12 +35,12 @@ BEGIN
               )
             )
           ) AS track_entity
-        FROM (SELECT p.location_id,
+        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate,
             COUNT(
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 6 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -49,7 +49,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 6 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -58,7 +58,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Rendez-vous ratés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 8 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -67,7 +67,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Rendez-vous ratés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 8 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -76,7 +76,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Perdus de vue
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 9 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -85,7 +85,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Perdus de vue
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 9 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -94,7 +94,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Arrêtés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 2 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -103,7 +103,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Arrêtés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 2 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -112,7 +112,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Transférés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 3 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -121,7 +121,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Transférés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 3 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -130,7 +130,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Décédés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 1 AND AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
@@ -139,7 +139,7 @@ BEGIN
             DISTINCT CASE WHEN ( -- Décédés
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE id_status = 1 AND AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -148,7 +148,7 @@ BEGIN
             DISTINCT CASE WHEN (
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART WHERE AC = 'A'
+                        FROM p_on_haart WHERE AC = 'A'
               )
                 ) THEN p.patient_id ELSE null END
             ) AS onHaart_total_adult,
@@ -156,7 +156,7 @@ BEGIN
             DISTINCT CASE WHEN (
               p.patient_id IN (
                 SELECT patient_id
-                        FROM p_on_HAART
+                        FROM p_on_haart
                         WHERE AC = 'C'
               )
                 ) THEN p.patient_id ELSE null END
@@ -270,7 +270,13 @@ BEGIN
                 ) THEN p.patient_id ELSE null END
             ) AS palliativeCare_total_child,
             COUNT(p.patient_id) AS grandTotal
-        FROM patient p
+        FROM patient p, isanteplus.tmp_idgen tmp,
+          ( SELECT location_id, MIN(date_created) oldestDate, MAX(date_created) latestDate
+            FROM `openmrs`.obs
+            GROUP BY location_id ) AS dates
+        WHERE tmp.identifier = p.identifier
+        AND tmp.program_id = program
+        AND dates.location_id = p.location_id
         GROUP BY p.location_id
         ) AS distinct_entity
       ) AS entities_list
