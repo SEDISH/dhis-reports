@@ -61,6 +61,9 @@ response = requests.get('http://' + URL + '/api/26/organisationUnits?pageSize=10
 data = response.json()
 orgUnits = data['organisationUnits']
 
+# create table if not exists
+cursor.execute(create_org_code_id)
+
 # select all organisations from the database
 dbValues = []
 cursor.execute(select_org_code_id)
