@@ -1,6 +1,6 @@
-DROP PROCEDURE IF EXISTS patient_status_events;
+DROP PROCEDURE IF EXISTS patient_status_event;
 DELIMITER $$
-CREATE PROCEDURE patient_status_events()
+CREATE PROCEDURE patient_status_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;

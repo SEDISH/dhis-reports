@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -z "$1" ] || [ -z "$2" ]; then
+if [ -z "$2" ]; then
   echo "Example usage: ./jsonFromatter.sh <name_of_a_script> <db_password>"
   exit
 fi

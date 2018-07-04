@@ -12,19 +12,19 @@ mysql -u $USER -p$1 -D $DB -e "source ./etl_extension/org_units/org_unit_etl_ext
 mysql -u $USER -p$1 -D $DB -e "source ./etl_extension/dashboard_etl_extension.sql";
 
 # create procedures
-mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_events.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/hiv_patient_with_activity_after_disc_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/idgen.sql";
-mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patient_status_events.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patient_status_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patient_insert_idgen.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patient_status_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patientArvEnd_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patientArvEnd_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patientNextArvInThirtyDay_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patientNextArvInThirtyDay_tracked_entity.sql";
-mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patientStartingArv_events.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patientStartingArv_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/patientStartingArv_tracked_entity.sql";
-mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextFourteenDays_events.sql";
+mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextFourteenDays_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextFourteenDays_tracked_entity.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextSevenDays_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/visitNextSevenDays_tracked_entity.sql";
@@ -38,7 +38,7 @@ mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/dashboard_event.sql";
 mysql -u $USER -p$1 -D $DB -e "source ./report_scripts/dashboard_tracked_entity.sql";
 
 #  generate and format the data
-mkdir -p report_results
+mkdir -p report_results;
 mysql -u $USER -p$1 $DB < report_scripts/generate_event_reports.sql
 ./cpJsons.sh ./report_results/
 

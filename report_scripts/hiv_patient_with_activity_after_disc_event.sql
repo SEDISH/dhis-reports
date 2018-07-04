@@ -1,7 +1,7 @@
 -- HIV patient with activity after discontinuation
-DROP PROCEDURE IF EXISTS hiv_patient_with_activity_after_disc_events;
+DROP PROCEDURE IF EXISTS hiv_patient_with_activity_after_disc_event;
 DELIMITER $$
-CREATE PROCEDURE hiv_patient_with_activity_after_disc_events()
+CREATE PROCEDURE hiv_patient_with_activity_after_disc_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -64,7 +64,7 @@ BEGIN
       ) AS entities_list
     ) AS instance
   ) AS instances)
-  INTO OUTFILE '/var/lib/mysql-files/hiv_patient_with_activity_after_disc_events.json';
+  INTO OUTFILE '/var/lib/mysql-files/hiv_patient_with_activity_after_disc_event.json';
 
   SET SESSION group_concat_max_len = default_group_concat_max_len;
 
