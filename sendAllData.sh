@@ -35,7 +35,8 @@ SUBURL='events';
 ADD_PARAMS='?strategy=CREATE_AND_UPDATE';
 send_files;
 
+# tmp disabled in order to fix dataset reports
 MATCH_FILE='.*\.sql-results.json';
 SUBURL='dataValueSets';
 ADD_PARAMS='?strictCategoryOptionCombos=true&orgUnitIdScheme=code';
-send_files;
+# send_files;
