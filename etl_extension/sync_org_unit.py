@@ -1,16 +1,17 @@
 import requests
-import MySQLdb as mdb
+import MySQLdb
 import argparse
+import warnings
 
 parser = argparse.ArgumentParser()
 parser.add_argument("db_password")
-parser.add_argument("admin_password")
-parser.add_argument("url_port")
+parser.add_argument("dhis2_admin_password")
+parser.add_argument("dhis2_url_port")
 args = parser.parse_args()
 
 USER = 'admin'
-PASSWORD = args.admin_password
-URL = args.url_port
+PASSWORD = args.dhis2_admin_password
+URL = args.dhis2_url_port
 
 class Unit:
     """Unit class"""
@@ -21,14 +22,14 @@ class Unit:
 
 def getScript(filename):
     fd = open(filename, 'r')
-    create_org_code_id = fd.read()
+    script = fd.read()
     fd.close()
-    return create_org_code_id
+    return script
 
 def executeInsertScript(script, data):
     try:
         cursor.execute(script, data)
-    except mdb.Error as e:
+    except MySQLdb.Error as e:
         print("Error %d: %s" % (e.args[0], e.args[1]))
 
 def fetchCodes(orgUnits):
@@ -46,9 +47,10 @@ DB_HOST = 'localhost'
 DB_USER = 'root'
 DB_PASSWORD = args.db_password
 ISANTEPLUS = 'isanteplus'
+warnings.filterwarnings('ignore', category=MySQLdb.Warning)
 
 # connect with the database
-con = mdb.connect(DB_HOST, DB_USER, DB_PASSWORD, ISANTEPLUS)
+con = MySQLdb.connect(DB_HOST, DB_USER, DB_PASSWORD, ISANTEPLUS)
 cursor = con.cursor()
 
 # prepare all scripts
