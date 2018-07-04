@@ -1,7 +1,7 @@
 -- List of patients who started an HAART regimen
-DROP PROCEDURE IF EXISTS patientStartingArv_events;
+DROP PROCEDURE IF EXISTS patientStartingArv_event;
 DELIMITER $$
-CREATE PROCEDURE patientStartingArv_events()
+CREATE PROCEDURE patientStartingArv_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;

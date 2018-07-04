@@ -1,6 +1,6 @@
-DROP PROCEDURE IF EXISTS visitNextFourteenDays_events;
+DROP PROCEDURE IF EXISTS visitNextFourteenDays_event;
 DELIMITER $$
-CREATE PROCEDURE visitNextFourteenDays_events()
+CREATE PROCEDURE visitNextFourteenDays_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;

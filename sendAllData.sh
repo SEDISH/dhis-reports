@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -z "$1" ] || [ -z "$2" ]; then
+if [ -z "$2" ]; then
   echo "Example usage: ./sendAllData.sh <dhis_url:port> <dhis_password>";
   exit;
 fi
@@ -27,12 +27,12 @@ mkdir -p logs;
 
 MATCH_FILE='.*\_tracked_entity.json';
 SUBURL='trackedEntityInstances';
-ADD_PARAMS='?importStrategy=CREATE_AND_UPDATE'; # Add &orgUnitIdScheme=code here in order to use organization code
+ADD_PARAMS='?strategy=CREATE_AND_UPDATE';
 send_files;
 
 MATCH_FILE='.*\_event.json';
 SUBURL='events';
-ADD_PARAMS='?importStrategy=CREATE_AND_UPDATE'; # Add &orgUnitIdScheme=code here in order to use organization code
+ADD_PARAMS='?strategy=CREATE_AND_UPDATE';
 send_files;
 
 MATCH_FILE='.*\.sql-results.json';

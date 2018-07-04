@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -z "$1" ] || [ -z "$2" ]; then
+if [ -z "$2" ]; then
   echo "Example usage: ./deleteAllProgramsData.sh <dhis_url:port> <dhis_password>"
   exit
 fi
