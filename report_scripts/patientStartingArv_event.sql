@@ -1,7 +1,7 @@
 -- List of patients who started an HAART regimen
-DROP PROCEDURE IF EXISTS patientStartingArv_events;
+DROP PROCEDURE IF EXISTS patientStartingArv_event;
 DELIMITER $$
-CREATE PROCEDURE patientStartingArv_events()
+CREATE PROCEDURE patientStartingArv_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -17,7 +17,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT DISTINCT JSON_OBJECT (
         "program", program,
         "programStage", "ZXfPQNL2Tmv",
-        "orgUnit", distinct_entity.organisation_code,
+        "orgUnit", distinct_entity.organisation_id,
         "eventDate", DATE_FORMAT(distinct_entity.visit_date, date_format),
         "status", "COMPLETED",
         "storedBy", "admin",
@@ -38,7 +38,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         )
       ) AS tracked_entity
       FROM (SELECT DISTINCT MIN(DATE(pdis.visit_date)) as visit_date, p.national_id, p.given_name,
-            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier, p.organisation_code
+            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier, p.organisation_id
             FROM isanteplus.patient p,isanteplus.patient_dispensing pdis, isanteplus.tmp_idgen tmp
             WHERE p.patient_id=pdis.patient_id
             AND pdis.drug_id IN (select arvd.drug_id from isanteplus.arv_drugs arvd)

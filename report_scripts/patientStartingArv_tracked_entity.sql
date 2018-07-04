@@ -19,7 +19,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT DISTINCT JSON_OBJECT (
         "trackedEntity", "MCPQUTHX1Ze",
         "trackedEntityInstance", distinct_entity.program_patient_id,
-        "orgUnit", distinct_entity.organisation_code,
+        "orgUnit", distinct_entity.organisation_id,
         "attributes", JSON_ARRAY(
         JSON_OBJECT(
           "attribute", "py0TvSTBlrr",
@@ -36,7 +36,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         ),
         "enrollments", JSON_ARRAY(
           JSON_OBJECT(
-            "orgUnit", distinct_entity.organisation_code,
+            "orgUnit", distinct_entity.organisation_id,
             "program", program,
             "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
             "incidentDate", DATE_FORMAT(DATE(NOW()), date_format)
@@ -44,7 +44,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         )
       ) AS tracked_entity
       FROM (SELECT DISTINCT MIN(DATE(pdis.visit_date)) as visit_date, p.national_id, p.given_name,
-            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier, p.organisation_code
+            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier, p.organisation_id
             FROM isanteplus.patient p,isanteplus.patient_dispensing pdis, isanteplus.tmp_idgen tmp
             WHERE p.patient_id=pdis.patient_id
             AND pdis.drug_id IN (select arvd.drug_id from isanteplus.arv_drugs arvd)

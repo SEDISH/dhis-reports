@@ -1,6 +1,6 @@
-DROP PROCEDURE IF EXISTS visitNextFourteenDays_events;
+DROP PROCEDURE IF EXISTS visitNextFourteenDays_event;
 DELIMITER $$
-CREATE PROCEDURE visitNextFourteenDays_events()
+CREATE PROCEDURE visitNextFourteenDays_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
   DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
@@ -16,7 +16,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT JSON_OBJECT (
         "program", program,
         "programStage", "GKgZ3OnIdsy",
-        "orgUnit", pat.organisation_code,
+        "orgUnit", pat.organisation_id,
         "eventDate", DATE_FORMAT(NOW(), date_format),
         "status", "COMPLETED",
         "storedBy", "admin",
@@ -60,7 +60,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name, tmp.program_patient_id,
           pa.family_name, pa.gender, TIMESTAMPDIFF(YEAR, pa.birthdate,DATE(now())) as age,
           pa.telephone, f.name, asl.name_fr, DATE_FORMAT(pv.next_visit_date, "%d-%m-%Y") as nextVisit,
-          pa.organisation_code
+          pa.organisation_id
         from isanteplus.patient pa, isanteplus.patient_visit pv, openmrs.form f,
           isanteplus.arv_status_loockup asl, isanteplus.tmp_idgen tmp
         where pa.patient_id=pv.patient_id AND pv.form_id=f.form_id and pa.arv_status = asl.id
@@ -73,7 +73,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name, tmp.program_patient_id,
           pa.family_name, pa.gender, TIMESTAMPDIFF(YEAR, pa.birthdate,DATE(now())) as age,
           pa.telephone, f.name, asl.name_fr, DATE_FORMAT(pd.next_dispensation_date, "%d-%m-%Y") as nextVisit,
-          pa.organisation_code
+          pa.organisation_id
         from isanteplus.patient pa, isanteplus.patient_dispensing pd, openmrs.encounter
           enc, openmrs.form f, isanteplus.arv_status_loockup asl, isanteplus.tmp_idgen tmp
         where pa.patient_id=pd.patient_id

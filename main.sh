@@ -1,6 +1,6 @@
 #!/bin/bash
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "Example usage: ./main.sh <dhis_url:port> <db_password> <dhis_password>";
+if [ -z "$3" ]; then
+  echo "Example usage: sudo ./main.sh <dhis_url:port> <db_password> <dhis_password>";
   exit;
 fi
 
@@ -9,6 +9,7 @@ DHIS_URL=$1;
 DB_PASS=$2;
 DHIS_PASSWORD=$3;
 
+python3 etl_extension/org_units/sync_org_unit.py $DB_PASS $DHIS_PASSWORD $DHIS_URL
 ./generateAllData.sh $DB_PASS;
 ./deleteAllProgramsData.sh $DHIS_URL $DHIS_PASSWORD;
 ./sendAllData.sh $DHIS_URL $DHIS_PASSWORD;
