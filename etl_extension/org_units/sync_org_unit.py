@@ -54,7 +54,7 @@ con = MySQLdb.connect(DB_HOST, DB_USER, DB_PASSWORD, ISANTEPLUS)
 cursor = con.cursor()
 
 # prepare all scripts
-create_org_code_id = getScript('create_org_code_id.sql')
+create_org_code_id = getScript('create_org_code_id_table.sql')
 insert_org_code_id = getScript('insert_org_code_id.sql')
 select_org_code_id = getScript('select_all_org_code_id.sql')
 
