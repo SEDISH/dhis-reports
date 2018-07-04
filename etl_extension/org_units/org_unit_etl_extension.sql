@@ -12,7 +12,16 @@ BEGIN
     ALTER TABLE patient
     ADD COLUMN organisation_code TEXT DEFAULT NULL
     AFTER last_updated_date;
+  END IF;
 
+  IF NOT EXISTS ( SELECT NULL
+                  FROM INFORMATION_SCHEMA.COLUMNS
+                  WHERE table_name = 'patient'
+                  AND table_schema = DATABASE()
+                  AND column_name = 'organisation_id')  THEN
+    ALTER TABLE patient
+    ADD COLUMN organisation_id VARCHAR(32) DEFAULT NULL
+    AFTER last_updated_date;
   END IF;
 
   SET attr_type = (SELECT location_attribute_type_id
@@ -26,6 +35,12 @@ BEGIN
   WHERE p.location_id = loc_attr.location_id
   AND loc_attr.attribute_type_id = attr_type
   AND organisation_code IS NULL;
+
+  UPDATE patient p, org_code_id org
+  SET p.organisation_id = org.id, p.last_updated_date = NOW()
+  WHERE org.code IS NOT NULL
+  AND organisation_id IS NULL
+  AND p.organisation_code = org.code;
 
   SET SQL_SAFE_UPDATES = 1;
 

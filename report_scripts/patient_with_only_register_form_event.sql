@@ -17,7 +17,7 @@ BEGIN
         SELECT DISTINCT JSON_OBJECT (
           "program", program,
           "programStage", "SSe717ZwYzp",
-          "orgUnit", distinct_entity.organisation_code,
+          "orgUnit", distinct_entity.organisation_id,
           "eventDate", DATE_FORMAT(distinct_entity.last_date, date_format),
           "status", "COMPLETED",
           "storedBy", "admin",
@@ -40,7 +40,7 @@ BEGIN
         FROM (
               SELECT DISTINCT p.st_id, p.national_id, p.family_name, p.identifier,
                 p.given_name, DATE(enc.encounter_datetime) AS last_date,
-                tmp.program_patient_id, p.organisation_code
+                tmp.program_patient_id, p.organisation_id
               FROM isanteplus.patient p, openmrs.encounter enc,
                 openmrs.encounter_type entype, isanteplus.tmp_idgen tmp
               WHERE p.patient_id=enc.patient_id

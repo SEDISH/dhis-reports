@@ -18,3 +18,4 @@ DHIS_PASSWORD=$2
 ./deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD iTlI6sz0KWM # visitNextSevenDays
 # ./deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD Rnvvg6utP5O # consultationByDay
 ./deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD lV4LM75LrPt # hivPatientWithoutFirstVisit
+./deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD Q7pD6QSyVwF # dashboard_event
