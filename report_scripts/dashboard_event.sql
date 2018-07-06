@@ -17,7 +17,7 @@ BEGIN
         SELECT DISTINCT JSON_OBJECT (
           "program", program,
           "programStage", "zqbLP5kJWAf",
-          "orgUnit", distinct_entity.organisation_id,
+          "orgUnit", distinct_entity.organisation_uid,
           "eventDate", DATE_FORMAT(NOW(), date_format),
           "status", "COMPLETED",
           "storedBy", "admin",
@@ -145,7 +145,7 @@ BEGIN
             )
           )
         ) AS tracked_entity
-        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate, p.organisation_id,
+        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate, p.organisation_uid,
             COUNT(
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (
