@@ -17,9 +17,10 @@ URL = args.dhis2_url_port
 class Unit:
     """Unit class"""
 
-    def __init__(self, uid, code):
+    def __init__(self, uid, code, path):
         self.uid = uid
         self.code = code
+        self.path = path
 
 def getScript(filename):
     fd = open(filename, 'r')
@@ -33,14 +34,27 @@ def executeInsertScript(script, data):
     except MySQLdb.Error as e:
         print("Error %d: %s" % (e.args[0], e.args[1]))
 
-def fetchCodes(orgUnits):
+def extractCode(orgUnit, orgUnitDetails):
+    try:
+        orgUnit['code'] = orgUnitDetails['code']
+    except KeyError:
+        orgUnit['code'] = None
+
+def extractPath(orgUnit, orgUnitDetails):
+    try:
+        path = orgUnitDetails['path']
+        path = path.replace('/', ',')
+        path = path[1:]
+        orgUnit['path'] = path
+    except KeyError:
+        orgUnit['path'] = None
+
+def fetchOrgUnit(orgUnits):
     for unit in orgUnits:
         wholeUnit = requests.get('http://' + URL + '/api/26/organisationUnits/' + unit['id'], auth=(USER, PASSWORD))
         unitParams = wholeUnit.json()
-        try:
-            unit['code'] = unitParams['code']
-        except KeyError:
-            unit['code'] = None
+        extractCode(unit, unitParams)
+        extractPath(unit, unitParams)
         print(unit)
     return orgUnits
 
@@ -81,11 +95,11 @@ for unit in orgUnits:
     if dbUnit is None:
         toFetch.append(unit)
 
-orgUnits = fetchCodes(toFetch)
+orgUnits = fetchOrgUnit(toFetch)
 
 # insert new organisations
 for unit in orgUnits:
-    data = (unit['id'], unit['code'])
+    data = (unit['id'], unit['code'], unit['path'])
     executeInsertScript(insert_org_code_uid, data)
 
 con.commit()
