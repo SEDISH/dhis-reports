@@ -9,7 +9,7 @@ DHIS_URL=$1;
 DB_PASS=$2;
 DHIS_PASSWORD=$3;
 
-python3 etl_extension/org_units/sync_org_unit.py $DB_PASS $DHIS_PASSWORD $DHIS_URL
+python etl_extension/org_units/sync_org_unit.py $DB_PASS $DHIS_PASSWORD $DHIS_URL
 ./generateAllData.sh $DB_PASS;
 ./deleteAllProgramsData.sh $DHIS_URL $DHIS_PASSWORD;
 
