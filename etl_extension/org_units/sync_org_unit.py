@@ -34,13 +34,13 @@ def executeInsertScript(script, data):
     except MySQLdb.Error as e:
         print("Error %d: %s" % (e.args[0], e.args[1]))
 
-def fetchCode(orgUnit, orgUnitDetails):
+def extractCode(orgUnit, orgUnitDetails):
     try:
         orgUnit['code'] = orgUnitDetails['code']
     except KeyError:
         orgUnit['code'] = None
 
-def fetchPath(orgUnit, orgUnitDetails):
+def extractPath(orgUnit, orgUnitDetails):
     try:
         path = orgUnitDetails['path']
         path = path.replace('/', ',')
@@ -53,8 +53,8 @@ def fetchOrgUnit(orgUnits):
     for unit in orgUnits:
         wholeUnit = requests.get('http://' + URL + '/api/26/organisationUnits/' + unit['id'], auth=(USER, PASSWORD))
         unitParams = wholeUnit.json()
-        fetchCode(unit, unitParams)
-        fetchPath(unit, unitParams)
+        extractCode(unit, unitParams)
+        extractPath(unit, unitParams)
         print(unit)
     return orgUnits
 
