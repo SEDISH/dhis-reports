@@ -3,7 +3,8 @@
 ## Prerequisites
 You have to install Python's support for MySQL
 ```
-sudo apt-get install python3-mysqldb
+sudo apt-get install python-dev libmysqlclient-dev
+pip install MySQL-python
 ```
 ## Running
 In order to upload the ETL data into DHIS2 got to the main directory an run  

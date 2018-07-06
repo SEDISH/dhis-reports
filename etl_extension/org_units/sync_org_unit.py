@@ -85,8 +85,8 @@ cursor.execute(create_org_code_uid)
 # select all organisations from the database
 dbValues = []
 cursor.execute(select_org_code_uid)
-for (uid, code) in cursor:
-    dbValues.append(Unit(uid, code))
+for (uid, code, path) in cursor:
+    dbValues.append(Unit(uid, code, path))
 
 # fetch only those which were not fetched before
 toFetch = []
