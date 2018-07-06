@@ -16,7 +16,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT DISTINCT JSON_OBJECT (
         "program", program,
         "programStage", "ev25AqGJkAk",
-        "orgUnit", distinct_entity.organisation_id,
+        "orgUnit", distinct_entity.organisation_uid,
         "eventDate", distinct_entity.event_date,
         "status", "COMPLETED",
         "storedBy", "admin",
@@ -37,7 +37,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       ) AS track_entity
       FROM (SELECT DISTINCT pat.identifier, pat.st_id, pat.national_id, pat.family_name, pat.given_name,
               enct.name, pat.vih_status,  DATE_FORMAT(DATE(patvi.date_started), date_format) AS event_date,
-              tmp.program_patient_id, pat.organisation_id
+              tmp.program_patient_id, pat.organisation_uid
             FROM isanteplus.patient pat, openmrs.visit patvi, openmrs.location loc,
               openmrs.encounter enc, isanteplus.tmp_idgen tmp, openmrs.encounter_type enct
             WHERE pat.patient_id=patvi.patient_id

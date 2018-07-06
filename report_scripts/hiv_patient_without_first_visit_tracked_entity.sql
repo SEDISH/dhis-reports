@@ -18,7 +18,7 @@ BEGIN
         SELECT DISTINCT JSON_OBJECT (
           "trackedEntity", "MCPQUTHX1Ze",
           "trackedEntityInstance", distinct_entity.program_patient_id,
-          "orgUnit", distinct_entity.organisation_id,
+          "orgUnit", distinct_entity.organisation_uid,
           "attributes", JSON_ARRAY(
             JSON_OBJECT(
               "attribute", "py0TvSTBlrr",
@@ -35,7 +35,7 @@ BEGIN
           ),
           "enrollments", JSON_ARRAY(
             JSON_OBJECT(
-              "orgUnit", distinct_entity.organisation_id,
+              "orgUnit", distinct_entity.organisation_uid,
               "program", program,
               "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
               "incidentDate", DATE_FORMAT(DATE(NOW()), date_format)
@@ -43,7 +43,7 @@ BEGIN
           )
         ) AS track_entity
         FROM (SELECT p.identifier, p.st_id, p.national_id, p.given_name, p.family_name,
-                MAX(DATE(enc.encounter_datetime)) AS last_date, p.organisation_id, tmp.program_patient_id
+                MAX(DATE(enc.encounter_datetime)) AS last_date, p.organisation_uid, tmp.program_patient_id
               FROM isanteplus.patient p, openmrs.encounter enc, openmrs.encounter_type entype, isanteplus.tmp_idgen tmp
               WHERE p.patient_id=enc.patient_id
               AND enc.encounter_type=entype.encounter_type_id

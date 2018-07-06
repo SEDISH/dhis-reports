@@ -16,7 +16,7 @@ BEGIN
         SELECT JSON_OBJECT (
           "program", program,
           "programStage", "ROWwGepZ2yb",
-          "orgUnit", distinct_entity.organisation_id,
+          "orgUnit", distinct_entity.organisation_uid,
           "eventDate", distinct_entity.last_date,
           "status", "COMPLETED",
           "storedBy", "admin",
@@ -69,7 +69,7 @@ BEGIN
         FROM (SELECT pat.identifier, pat.st_id, pat.national_id, pat.given_name, pat.family_name,
                 pat.mother_name, pat.birthdate, pat.gender, DATE_FORMAT(MAX(patstatus.start_date), date_format) AS last_date,
                 patstatus.dis_reason, pat.telephone, arv.name_fr, TIMESTAMPDIFF(YEAR, pat.birthdate, DATE(NOW())) AS age,
-                pat.organisation_id, tmp.program_patient_id
+                pat.organisation_uid, tmp.program_patient_id
               FROM isanteplus.patient pat
               INNER JOIN isanteplus.patient_status_arv patstatus
               ON pat.patient_id=patstatus.patient_id

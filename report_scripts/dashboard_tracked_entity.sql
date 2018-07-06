@@ -19,7 +19,7 @@ BEGIN
         SELECT JSON_OBJECT (
           "trackedEntity", "vZqorMSOYSr",
           "trackedEntityInstance", distinct_entity.program_patient_id,
-          "orgUnit", distinct_entity.organisation_id,
+          "orgUnit", distinct_entity.organisation_uid,
           "attributes", JSON_ARRAY(
             JSON_OBJECT(
               "attribute", "bmVKAcfjORB", -- LocationId
@@ -28,14 +28,14 @@ BEGIN
             ),
           "enrollments", JSON_ARRAY(
             JSON_OBJECT(
-              "orgUnit", distinct_entity.organisation_id,
+              "orgUnit", distinct_entity.organisation_uid,
               "program", program,
               "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
               "incidentDate", DATE_FORMAT(DATE(NOW()), date_format)
               )
             )
           ) AS track_entity
-        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate, p.organisation_id,
+        FROM (SELECT p.location_id, tmp.program_patient_id, dates.oldestDate, dates.latestDate, p.organisation_uid,
             COUNT(
             DISTINCT CASE WHEN ( -- Réguliers (actifs sous ARV)
               p.patient_id IN (

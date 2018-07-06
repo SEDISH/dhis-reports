@@ -17,7 +17,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT DISTINCT JSON_OBJECT (
         "program", program,
         "programStage", "ZXfPQNL2Tmv",
-        "orgUnit", distinct_entity.organisation_id,
+        "orgUnit", distinct_entity.organisation_uid,
         "eventDate", DATE_FORMAT(distinct_entity.visit_date, date_format),
         "status", "COMPLETED",
         "storedBy", "admin",
@@ -38,7 +38,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         )
       ) AS tracked_entity
       FROM (SELECT DISTINCT MIN(DATE(pdis.visit_date)) as visit_date, p.national_id, p.given_name,
-            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier, p.organisation_id
+            p.family_name, p.birthdate, tmp.program_patient_id, p.identifier, p.organisation_uid
             FROM isanteplus.patient p,isanteplus.patient_dispensing pdis, isanteplus.tmp_idgen tmp
             WHERE p.patient_id=pdis.patient_id
             AND pdis.drug_id IN (select arvd.drug_id from isanteplus.arv_drugs arvd)

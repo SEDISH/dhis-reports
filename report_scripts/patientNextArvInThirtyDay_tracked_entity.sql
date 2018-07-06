@@ -19,7 +19,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT DISTINCT JSON_OBJECT (
         "trackedEntity", "MCPQUTHX1Ze",
         "trackedEntityInstance", distinct_entity.program_patient_id,
-        "orgUnit", distinct_entity.organisation_id,
+        "orgUnit", distinct_entity.organisation_uid,
         "attributes", JSON_ARRAY(
         JSON_OBJECT(
           "attribute", "py0TvSTBlrr",
@@ -36,7 +36,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         ),
         "enrollments", JSON_ARRAY(
           JSON_OBJECT(
-            "orgUnit", distinct_entity.organisation_id,
+            "orgUnit", distinct_entity.organisation_uid,
             "program", program,
             "enrollmentDate", DATE_FORMAT(DATE(NOW()), date_format),
             "incidentDate", DATE_FORMAT(DATE(NOW()), date_format)
@@ -46,7 +46,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       FROM (SELECT p.identifier, p.st_id, p.national_id, p.given_name, p.family_name,
               DATE_FORMAT(p.birthdate, date_format) AS birthdate,
               DATE_FORMAT(pdisp.next_dispensation_date, date_format) AS dispensation_date,
-              DATE_FORMAT(pdisp.visit_date, date_format) AS visit_date, p.organisation_id, tmp.program_patient_id
+              DATE_FORMAT(pdisp.visit_date, date_format) AS visit_date, p.organisation_uid, tmp.program_patient_id
             FROM isanteplus.patient p, isanteplus.patient_dispensing pdisp,
                 (SELECT pad.patient_id, MAX(pad.next_dispensation_date) as next_dispensation_date
                  FROM isanteplus.patient_dispensing pad

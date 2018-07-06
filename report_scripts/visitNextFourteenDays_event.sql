@@ -16,7 +16,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
       SELECT JSON_OBJECT (
         "program", program,
         "programStage", "GKgZ3OnIdsy",
-        "orgUnit", pat.organisation_id,
+        "orgUnit", pat.organisation_uid,
         "eventDate", DATE_FORMAT(NOW(), date_format),
         "status", "COMPLETED",
         "storedBy", "admin",
@@ -60,7 +60,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name, tmp.program_patient_id,
           pa.family_name, pa.gender, TIMESTAMPDIFF(YEAR, pa.birthdate,DATE(now())) as age,
           pa.telephone, f.name, asl.name_fr, DATE_FORMAT(pv.next_visit_date, "%d-%m-%Y") as nextVisit,
-          pa.organisation_id
+          pa.organisation_uid
         from isanteplus.patient pa, isanteplus.patient_visit pv, openmrs.form f,
           isanteplus.arv_status_loockup asl, isanteplus.tmp_idgen tmp
         where pa.patient_id=pv.patient_id AND pv.form_id=f.form_id and pa.arv_status = asl.id
@@ -73,7 +73,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
         select DISTINCT pa.st_id, pa.national_id, pa.identifier, pa.given_name, tmp.program_patient_id,
           pa.family_name, pa.gender, TIMESTAMPDIFF(YEAR, pa.birthdate,DATE(now())) as age,
           pa.telephone, f.name, asl.name_fr, DATE_FORMAT(pd.next_dispensation_date, "%d-%m-%Y") as nextVisit,
-          pa.organisation_id
+          pa.organisation_uid
         from isanteplus.patient pa, isanteplus.patient_dispensing pd, openmrs.encounter
           enc, openmrs.form f, isanteplus.arv_status_loockup asl, isanteplus.tmp_idgen tmp
         where pa.patient_id=pd.patient_id
