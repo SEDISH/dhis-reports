@@ -4,7 +4,7 @@ DELIMITER $$
 CREATE PROCEDURE patientStartingArv_event()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
-  DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
+  DECLARE max_group_concat_max_len INT UNSIGNED DEFAULT 4294967295;
   DECLARE date_format VARCHAR(60) DEFAULT '%Y-%m-%d';
   DECLARE program CHAR(11) DEFAULT 'ewmeREcqCmN';
 
@@ -48,8 +48,7 @@ FROM (SELECT CONCAT('[', instance.array, ']') as entity_instance
             GROUP BY p.patient_id) AS distinct_entity
     ) AS entities_list
   ) AS instance
-) AS instances)
-INTO OUTFILE '/var/lib/mysql-files/patientStartingArv_event.json';
+) AS instances) AS result;
 
 SET SESSION group_concat_max_len = default_group_concat_max_len;
 

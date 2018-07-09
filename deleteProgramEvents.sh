@@ -14,7 +14,7 @@ scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 mkdir -p $scriptDir/logs
 
 curl -k -u "$USERNAME:$DHIS_PASSWORD" "http://$DHIS_URL/api/26/events?pageSize=$PAGE_SIZE&program=$PROGRAM_UID" 2>/dev/null | \
-  python3 -c "import sys, json; [print(el['href']) for el in json.load(sys.stdin)['events']]" | \
+  jq -r '.events | .[] | .href' | \
   while read url; do
      curl -k -X "DELETE" -u "$USERNAME:$DHIS_PASSWORD" $url 2>&1 | \
        awk -v date="$(date +"%Y-%m-%d %r")" '{print date ": " $0}' >> $scriptDir/logs/delete_event_reports.log

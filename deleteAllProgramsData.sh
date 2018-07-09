@@ -17,6 +17,5 @@ $scriptDir/deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD ewmeREcqCmN # patient
 $scriptDir/deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD rCJQM1bvXYm # visitNextFourteenDays
 $scriptDir/deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD Lh9TkmcZf4a # patient_with_only_register_form
 $scriptDir/deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD iTlI6sz0KWM # visitNextSevenDays
-# $scriptDir/deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD Rnvvg6utP5O # consultationByDay
 $scriptDir/deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD lV4LM75LrPt # hivPatientWithoutFirstVisit
 $scriptDir/deleteProgramEvents.sh $DHIS_URL $DHIS_PASSWORD Q7pD6QSyVwF # dashboard_event

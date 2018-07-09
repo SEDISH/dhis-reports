@@ -39,9 +39,8 @@ mysql -u $USER -p$1 -D $DB -e "source $scriptDir/report_scripts/dashboard_event.
 mysql -u $USER -p$1 -D $DB -e "source $scriptDir/report_scripts/dashboard_tracked_entity.sql";
 
 #  generate and format the data
-mkdir -p report_results;
-mysql -u $USER -p$1 $DB < $scriptDir/report_scripts/generate_event_reports.sql
-$scriptDir/cpJsons.sh $scriptDir/report_results/
+mkdir -p $scriptDir/report_results;
+$scriptDir/generate_event_reports.sh $1 $scriptDir/report_results/
 
 $scriptDir/jsonFormatter.sh communityArvDistribution.sql  $1
 $scriptDir/jsonFormatter.sh exposed_infants_register_in_ptme_program.sql  $1
