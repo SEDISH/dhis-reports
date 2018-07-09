@@ -4,7 +4,7 @@ DELIMITER $$
 CREATE PROCEDURE hiv_patient_with_activity_after_disc_tracked_entity()
 BEGIN
   DECLARE default_group_concat_max_len INTEGER DEFAULT 1024;
-  DECLARE max_group_concat_max_len INTEGER DEFAULT 4294967295;
+  DECLARE max_group_concat_max_len INT UNSIGNED DEFAULT 4294967295;
   DECLARE date_format VARCHAR(255) DEFAULT '%Y-%m-%d';
   DECLARE program CHAR(11) DEFAULT 'mfyC6GCw1IH';
   DECLARE default_uuid CHAR(36) DEFAULT '9d0113c6-f23a-4461-8428-7e9a7344f2ba';
@@ -61,8 +61,7 @@ BEGIN
               GROUP BY p.patient_id) AS distinct_entity
       ) AS entities_list
     ) AS instance
-  ) AS instances)
-  INTO OUTFILE '/var/lib/mysql-files/hiv_patient_with_activity_after_disc_tracked_entity.json';
+  ) AS instances) AS result;
 
   SET SESSION group_concat_max_len = default_group_concat_max_len;
 

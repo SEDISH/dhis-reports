@@ -6,6 +6,7 @@ import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("db_password")
+parser.add_argument("db_address")
 parser.add_argument("dhis2_admin_password")
 parser.add_argument("dhis2_url_port")
 args = parser.parse_args()
@@ -58,9 +59,9 @@ def fetchOrgUnit(orgUnits):
         print(unit)
     return orgUnits
 
-DB_HOST = 'localhost'
 DB_USER = 'root'
 DB_PASSWORD = args.db_password
+DB_HOST = args.db_address
 ISANTEPLUS = 'isanteplus'
 warnings.filterwarnings('ignore', category=MySQLdb.Warning)
 

@@ -1,17 +1,18 @@
 #!/bin/bash
-if [ -z "$3" ]; then
-  echo "Example usage: sudo ./main.sh <dhis_url:port> <db_password> <dhis_password>";
+if [ -z "$4" ]; then
+  echo "Example usage: sudo ./main.sh <db_password> <db_address> <dhis_admin_password> <dhis_url:port>";
   exit;
 fi
 
 USERNAME=admin
-DHIS_URL=$1;
-DB_PASS=$2;
+DB_PASS=$1;
+DB_ADDRESS=$2;
 DHIS_PASSWORD=$3;
+DHIS_URL=$4;
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 mkdir -p $scriptDir/logs;
 
-python $scriptDir/etl_extension/org_units/sync_org_unit.py $DB_PASS $DHIS_PASSWORD $DHIS_URL
+python $scriptDir/etl_extension/org_units/sync_org_unit.py $DB_PASS $DB_ADDRESS $DHIS_PASSWORD $DHIS_URL
 $scriptDir/generateAllData.sh $DB_PASS;
 $scriptDir/deleteAllProgramsData.sh $DHIS_URL $DHIS_PASSWORD;
 
